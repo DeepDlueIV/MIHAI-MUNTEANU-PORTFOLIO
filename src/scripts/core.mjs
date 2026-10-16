@@ -5,7 +5,7 @@ export const SHOWCASE_SECONDS = 6;
 export const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 /** @returns {MotionMode} */
 export function resolveMotion(saved, systemReduced) {
-  return ['full','reduced','off'].includes(saved) ? saved : systemReduced ? 'reduced' : 'full';
+  return ['full','reduced','off'].includes(saved) ? saved : 'full';
 }
 export function phaseAt(seconds) {
   if (!Number.isFinite(seconds)) throw new TypeError('Time must be finite');
