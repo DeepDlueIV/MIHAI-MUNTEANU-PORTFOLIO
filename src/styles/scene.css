@@ -1,0 +1,29 @@
+/* Native 3D planes are present in the first HTML, including without JavaScript.
+   cqw keeps the geometry proportional before any script or resize callback. */
+.scene-stage{container-type:inline-size;--unit:17.24138cqw;perspective:none}
+.css-model{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;transform:rotateX(-.56rad) rotateY(-.58rad);will-change:transform}
+.slab{position:absolute;width:calc(var(--w)*var(--unit));height:calc(var(--d)*var(--unit));left:calc(var(--w)*var(--unit)*-.5);top:calc(var(--d)*var(--unit)*-.5);transform:translate3d(calc(var(--x)*var(--unit)),calc(var(--y)*var(--unit)*-1),0) rotateX(90deg);transform-style:preserve-3d}
+.plate-face{position:absolute;transform-style:preserve-3d;backface-visibility:hidden}
+.plate-top{inset:0;border-radius:calc(var(--unit)*.16);background:linear-gradient(148deg,#c6d0dc,#92a0b5 65%,#a3b2c7);border:1px solid #dce6f377;transform:translateZ(calc(var(--unit)*.12));box-shadow:inset 0 0 0 5px #34465e20,inset 0 0 0 6px #e8eff52e}
+.edge-front,.edge-back{width:100%;height:calc(var(--unit)*.17);top:calc(50% - var(--unit)*.085);left:0;background:linear-gradient(#536277,#2d3849);border-radius:calc(var(--unit)*.04);border:1px solid #1c2637}
+.edge-front{transform:rotateX(-90deg) translateZ(calc(var(--d)*var(--unit)*.5));display:flex;align-items:center;gap:calc(var(--unit)*.065);padding-left:calc(var(--unit)*.55)}
+.edge-front i{width:calc(var(--unit)*.067);height:calc(var(--unit)*.025);background:#4674d2}
+.edge-back{transform:rotateX(90deg) translateZ(calc(var(--d)*var(--unit)*.5))}
+.edge-left,.edge-right{width:calc(var(--unit)*.17);height:100%;left:calc(50% - var(--unit)*.085);top:0;border-radius:calc(var(--unit)*.04);background:linear-gradient(90deg,#354155,#263244);border:1px solid #273446}
+.edge-left{transform:rotateY(-90deg) translateZ(calc(var(--w)*var(--unit)*.5))}.edge-right{transform:rotateY(90deg) translateZ(calc(var(--w)*var(--unit)*.5))}
+.chip{position:absolute;left:33%;top:29%;width:34%;height:42%;border-radius:calc(var(--unit)*.08);transform:translateZ(calc(var(--unit)*.11));background:linear-gradient(150deg,#172941,#294369);border:1px solid #93b9ed55;box-shadow:0 calc(var(--unit)*.045) 0 #111c31,0 calc(var(--unit)*.07) calc(var(--unit)*.06) #11203866,inset 0 0 0 5px #0b203447;display:grid;place-items:center}
+.chip-pattern{width:54%;height:54%;display:flex;align-items:center;justify-content:center;gap:14%}.chip-pattern i{background:linear-gradient(#72a2f9,#466caf);border:1px solid #7ba6fb66;border-radius:2px;box-shadow:0 3px 0 #17346b;width:14%;height:74%}.pattern-1{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:15%;width:48%;height:57%}.pattern-1 i{width:100%;height:100%}.pattern-2{flex-direction:column;gap:15%}.pattern-2 i{width:85%;height:13%;border:0;border-radius:3px}
+.plate-traces{position:absolute;left:7%;right:7%;top:28%;bottom:28%;display:flex;justify-content:space-between;flex-direction:column;transform:translateZ(1px)}.plate-traces i{height:2px;width:100%;background:linear-gradient(90deg,#436089,#668ac200 43%,#668ac200 57%,#436089)}
+.fastener{position:absolute;width:calc(var(--unit)*.073);height:calc(var(--unit)*.073);border-radius:50%;background:#314155;border:1px solid #9aaabd;box-shadow:inset 0 0 0 2px #192c4266}.f1{top:8%;left:6%}.f2{top:8%;right:6%}.f3{bottom:8%;left:6%}.f4{bottom:8%;right:6%}.board-label{position:absolute;right:11%;bottom:11%;font-family:var(--mono);font-size:calc(var(--unit)*.06);letter-spacing:1px;color:#566b8a}
+.slab.is-active .chip{background:linear-gradient(150deg,#254b91,#2c60cb);border-color:#83b0ffb8}.slab.is-active .chip-pattern i{background:linear-gradient(#c4ddff,#82b1ff)}.slab.is-active .edge-front i{background:#9cc4ff;box-shadow:0 0 5px #5e9bff}.slab.is-active .plate-traces i{background:linear-gradient(90deg,#3a6dd0,#668ac200 43%,#668ac200 57%,#3a6dd0)}
+.wire{position:absolute;left:calc(var(--length)*var(--unit)*-.5);top:-1px;width:calc(var(--length)*var(--unit));height:2px;border-radius:2px;background:#354b70;transform-style:preserve-3d;transform:translate3d(calc(var(--tx)*var(--unit)),calc(var(--ty)*var(--unit)),calc(var(--tz)*var(--unit))) rotateY(var(--yaw)) rotateZ(var(--pitch));box-shadow:0 1px 0 #182948}.wire.is-active{background:#6595ff;box-shadow:0 0 5px #4881ff55}
+.signal{position:absolute;width:calc(var(--unit)*.07);height:calc(var(--unit)*.07);left:calc(var(--unit)*-.035);top:calc(var(--unit)*-.035);background:#dfedff;border:1px solid #a2c5ff;border-radius:2px;box-shadow:0 0 9px 2px #689fff88;transform-style:preserve-3d;display:none}.scene-stage[data-motion=full] .signal:not([hidden]){display:block}
+html[data-motion=full] .slab :is(.chip,.chip-pattern i,.edge-front i){transition:background .4s,border-color .4s}
+
+/* The same static geometry stays visible until the first successful GPU frame. */
+.hero-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;pointer-events:none}
+.scene-stage[data-renderer=webgl] .hero-canvas{opacity:1}
+.scene-stage[data-renderer=webgl] .css-model{visibility:hidden}
+html[data-motion=reduced] .phase-track b{transition:none}
+
+@media(max-width:700px){.expertise-row p,.study-copy p,.about-copy p{font-size:16px}.approach-steps p{font-size:15px}.study{min-height:510px}.study-copy{min-height:195px}}
