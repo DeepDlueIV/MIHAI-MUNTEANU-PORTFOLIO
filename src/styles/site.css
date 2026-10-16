@@ -2,6 +2,7 @@
 @import "./sections.css";
 @import "./responsive.css";
 @import "./scene.css";
+@import "./contact.css";
 
 /* Keep adjacent location text separated when the header becomes compact. */
 @media (max-width: 900px) {

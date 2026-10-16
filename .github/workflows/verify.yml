@@ -23,7 +23,7 @@ jobs:
           node-version: '24'
       - run: npm ci
       - run: npm run check && npm test && npm run build
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium firefox
       - run: npm run test:browser
       - name: Record tested source
         if: always()
