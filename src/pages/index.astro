@@ -1,0 +1,39 @@
+---
+import { profile } from '../data/profile.ts';
+import { renderBody } from '../page.mjs';
+import '../styles/site.css';
+const siteUrl = profile.siteUrl?.startsWith('https://') ? profile.siteUrl : null;
+const title = `${profile.name} — Software, connected.`;
+const description = `${profile.name} — software consulting, backend architecture and business-system integrations. Based in Paris, France.`;
+---
+<!doctype html>
+<html lang="en" data-motion="off">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#11151c" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    {siteUrl && <link rel="canonical" href={siteUrl} />}
+    {siteUrl && <meta property="og:url" content={siteUrl} />}
+    {siteUrl && <meta property="og:image" content={new URL('/social.svg', siteUrl).href} />}
+    <script is:inline>
+      // Resolve motion before the first paint, including when storage is denied.
+      let saved = null;
+      try { saved = localStorage.getItem('mm-portfolio-motion'); } catch {}
+      document.documentElement.dataset.motion = ['full', 'reduced', 'off'].includes(saved)
+        ? saved
+        : matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduced' : 'full';
+    </script>
+  </head>
+  <body>
+    <Fragment set:html={renderBody(profile)} />
+    <script>
+      import '../scripts/app.mjs';
+    </script>
+  </body>
+</html>
