@@ -1,11 +1,15 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, chromium, firefox } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
 await mkdir('qa', { recursive: true });
 
-for (const browserName of ['chromium', 'firefox']) {
- test.describe(`Contact and legal pages / ${browserName}`, () => {
-  test.use({ browserName, launchOptions: {}, javaScriptEnabled: false });
-  test('static links, readable documents, correct identity and responsive contact', async ({ page }) => {
+for (const [browserName, browserType] of [['chromium', chromium], ['firefox', firefox]]) {
+ test(`Contact and legal pages / ${browserName}: static links, identity and responsive layout`, async () => {
+  // Worker-scoped browserName cannot be overridden inside describe. Launch each
+  // target explicitly so this focused smoke does not duplicate the WebGL suite.
+  const browser = await browserType.launch();
+  const context = await browser.newContext({ javaScriptEnabled: false, baseURL: 'http://127.0.0.1:4321', viewport: { width: 1440, height: 1000 } });
+  const page = await context.newPage();
+  try {
    const errors = [], badResponses = [];
    page.on('pageerror', error => errors.push(String(error)));
    page.on('response', response => { if (response.status() >= 400) badResponses.push(response.url()); });
@@ -43,6 +47,12 @@ for (const browserName of ['chromium', 'firefox']) {
    expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
    await page.locator('#contact').screenshot({ path: `qa/${browserName}-contact-mobile.png` });
    expect(errors).toEqual([]); expect(badResponses).toEqual([]);
-  });
+  } catch (error) {
+   await page.screenshot({ path: `qa/${browserName}-legal-failure.png`, fullPage: true }).catch(() => {});
+   throw error;
+  } finally {
+   await context.close();
+   await browser.close();
+  }
  });
 }
