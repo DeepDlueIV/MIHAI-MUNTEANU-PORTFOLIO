@@ -32,7 +32,7 @@ const mail = profile.contactEmail ? `mailto:${encodeURIComponent(profile.contact
   <header class="site-header">
    <div class="shell legal-header-inner">
     <a class="brand" href="/" aria-label={`${profile.name} — home`}><Fragment set:html={mark} /><span>{profile.name}</span></a>
-    <div class="legal-header-links"><a href="/" class="legal-home-link"><span aria-hidden="true">←</span> Back to portfolio</a><a href={mail} class="legal-write-link" aria-label="Email Mihai Munteanu"><Fragment set:html={icon('mail')} /><span>Let’s talk</span></a></div>
+    <div class="legal-header-links"><a href="/" class="legal-home-link"><span aria-hidden="true">←</span> Back to home</a><a href={mail} class="legal-write-link" aria-label={`Email ${profile.name}`}><Fragment set:html={icon('mail')} /><span>Let’s talk</span></a></div>
    </div>
   </header>
   <main id="main">
@@ -52,7 +52,7 @@ const mail = profile.contactEmail ? `mailto:${encodeURIComponent(profile.contact
     <article class="legal-article" aria-label={policy.title}>
      <p class="legal-summary">{policy.summary}</p>
      {policy.sections.map((section, i) => <section id={section.id} class="legal-section"><h2><span aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>{section.title}</h2><div class="legal-prose"><Fragment set:html={section.body} /></div></section>)}
-     <div class="legal-closing"><span>Back to the work.</span><a href="/#work">Explore the portfolio <Fragment set:html={icon('arrow')} /></a></div>
+     <div class="legal-closing"><span>Software that works together.</span><a href="/#work">Explore solutions <Fragment set:html={icon('arrow')} /></a></div>
     </article>
    </div>
   </main>

@@ -3,8 +3,8 @@ import { profile } from '../data/profile.ts';
 import { renderBody } from '../page.mjs';
 import '../styles/site.css';
 const siteUrl = profile.siteUrl?.startsWith('https://') ? profile.siteUrl : null;
-const title = `${profile.name} — Software, connected.`;
-const description = `${profile.name} — software consulting, backend architecture and business-system integrations. Based in Paris, France.`;
+const title = `${profile.name} — Backend & Integration Consulting`;
+const description = 'Software consulting, backend architecture, and API integrations for B2B products. Mihai Munteanu, Paris, France.';
 ---
 <!doctype html>
 <html lang="en" data-motion="off">
@@ -22,12 +22,10 @@ const description = `${profile.name} — software consulting, backend architectu
     {siteUrl && <meta property="og:url" content={siteUrl} />}
     {siteUrl && <meta property="og:image" content={new URL('/social.svg', siteUrl).href} />}
     <script is:inline>
-      // Resolve motion before the first paint, including when storage is denied.
+      // Keep the initial paint consistent with the runtime and the saved explicit preference.
       let saved = null;
       try { saved = localStorage.getItem('mm-portfolio-motion'); } catch {}
-      document.documentElement.dataset.motion = ['full', 'reduced', 'off'].includes(saved)
-        ? saved
-        : matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduced' : 'full';
+      document.documentElement.dataset.motion = ['full', 'reduced', 'off'].includes(saved) ? saved : 'full';
     </script>
   </head>
   <body>
