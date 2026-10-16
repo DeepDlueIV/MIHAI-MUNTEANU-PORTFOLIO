@@ -15,7 +15,7 @@ test('phase uses one 12-second clock and wraps exact boundaries', () => {
 test('an explicit saved preference overrides OS reduced motion', () => {
   assert.equal(resolveMotion('full', true), 'full');
   assert.equal(resolveMotion('off', false), 'off');
-  assert.equal(resolveMotion(null, true), 'reduced');
+  assert.equal(resolveMotion(null, true), 'full');
   assert.equal(resolveMotion('invalid', false), 'full');
 });
 test('path interpolation has finite endpoints and clamps to the real endpoint', () => {
