@@ -17,8 +17,11 @@ for (const [browserName, browserType] of [['chromium', chromium], ['firefox', fi
    await page.locator('.footer-links a[href="/privacy/"]').click();
    await expect(page).toHaveURL(/\/privacy\/$/);
    for (const [path, title] of [['/privacy/', 'Privacy Policy'], ['/terms-of-service/', 'Terms of Service']]) {
-    const response = await page.goto(path);
+    // A fresh HTTP request proves the route returns 200. Firefox can report a
+    // normal 304 on a repeated browser navigation; its rendered DOM is checked below.
+    const response = await context.request.get(path);
     expect(response.status()).toBe(200);
+    await page.goto(path);
     await expect(page).toHaveTitle(`${title} — Mihai Munteanu`);
     await expect(page.locator('h1')).toHaveText(title);
     await expect(page.locator('.legal-article')).toContainText('47 rue Vivienne, 75002 Paris, France');
