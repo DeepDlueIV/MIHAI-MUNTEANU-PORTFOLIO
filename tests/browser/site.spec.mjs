@@ -39,7 +39,7 @@ test('actual GPU pixels move, geometry is visible, assets and runtime stay clean
 test('system reduce, persisted Full override, smooth anchors and Off all work', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
-  await expect(page.locator('html')).toHaveAttribute('data-motion', 'reduced');
+  await expect(page.locator('html')).toHaveAttribute('data-motion', 'full');
   await page.getByLabel('Motion mode').selectOption('full');
   await page.reload(); await waitForScene(page);
   await expect(page.locator('html')).toHaveAttribute('data-motion', 'full');
@@ -140,4 +140,25 @@ test('contact copies the real address without inventing a mail form', async ({ p
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('47 rue Vivienne, 75002 Paris, France');
   await expect(page.locator('form')).toHaveCount(0);
   await expect(page.locator('a[href^="mailto:"]')).toHaveCount(0);
+});
+
+test('Firefox style controls, visible progress, and Play resume under a mouse pointer', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/#work');
+  await expect(page.locator('html')).toHaveAttribute('data-motion', 'full');
+  const control = page.getByLabel('Motion mode');
+  await expect(control).toHaveValue('full');
+  expect(await control.evaluate(e => getComputedStyle(e).colorScheme)).toBe('dark');
+  await page.locator('[data-showcase]').hover();
+  const progress = page.locator('.project-tabs button[aria-selected=true] .tab-progress');
+  const before = parseFloat(await progress.evaluate(e => e.style.width));
+  await page.waitForTimeout(1200);
+  const after = parseFloat(await progress.evaluate(e => e.style.width));
+  expect(after).toBeGreaterThan(before);
+  const play = page.locator('.autoplay-button');
+  await play.click(); await expect(play).toHaveAttribute('aria-pressed', 'true');
+  await play.click(); await expect(play).toHaveAttribute('aria-pressed', 'false');
+  const resumed = parseFloat(await progress.evaluate(e => e.style.width));
+  await page.waitForTimeout(1100);
+  expect(parseFloat(await progress.evaluate(e => e.style.width))).toBeGreaterThan(resumed);
 });
