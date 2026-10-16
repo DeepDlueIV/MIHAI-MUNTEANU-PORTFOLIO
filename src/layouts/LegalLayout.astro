@@ -1,0 +1,61 @@
+---
+import { profile } from '../data/profile.ts';
+import type { LegalDocument } from '../data/legal.ts';
+import { mark, icon, renderFooter } from '../page.mjs';
+import '../styles/site.css';
+import '../styles/legal.css';
+interface Props { policy: LegalDocument }
+const { policy } = Astro.props;
+const title = `${policy.title} — ${profile.name}`;
+const baseUrl = profile.siteUrl?.startsWith('https://') ? profile.siteUrl : null;
+const canonical = baseUrl ? new URL(policy.path, baseUrl).href : null;
+const updated = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${policy.updated}T00:00:00Z`));
+const mail = profile.contactEmail ? `mailto:${encodeURIComponent(profile.contactEmail)}` : '/#contact';
+---
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#11151c" />
+  <meta name="description" content={policy.description} />
+  <title>{title}</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={policy.description} />
+  {canonical && <link rel="canonical" href={canonical} />}
+  {canonical && <meta property="og:url" content={canonical} />}
+ </head>
+ <body id="top" class="legal-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+   <div class="shell legal-header-inner">
+    <a class="brand" href="/" aria-label={`${profile.name} — home`}><Fragment set:html={mark} /><span>{profile.name}</span></a>
+    <div class="legal-header-links"><a href="/" class="legal-home-link"><span aria-hidden="true">←</span> Back to portfolio</a><a href={mail} class="legal-write-link" aria-label="Email Mihai Munteanu"><Fragment set:html={icon('mail')} /><span>Let’s talk</span></a></div>
+   </div>
+  </header>
+  <main id="main">
+   <div class="legal-hero">
+    <div class="shell">
+     <p class="eyebrow"><span class="blue-line"></span>SITE INFORMATION</p>
+     <h1>{policy.title}</h1>
+     <div class="legal-hero-bottom"><p>{policy.intro}</p><div class="legal-date"><span>LAST UPDATED</span><time datetime={policy.updated}>{updated}</time></div></div>
+    </div>
+   </div>
+   <div class="shell legal-grid">
+    <aside class="legal-toc" aria-label="On this page">
+     <p class="legal-overline">IN THIS DOCUMENT</p>
+     <ol>{policy.sections.map((section, i) => <li><a href={`#${section.id}`}><span>{String(i + 1).padStart(2, '0')}</span>{section.title}</a></li>)}</ol>
+     <a class="legal-toc-contact" href={mail}><Fragment set:html={icon('mail')} /><span>A question? Get in touch.</span></a>
+    </aside>
+    <article class="legal-article" aria-label={policy.title}>
+     <p class="legal-summary">{policy.summary}</p>
+     {policy.sections.map((section, i) => <section id={section.id} class="legal-section"><h2><span aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>{section.title}</h2><div class="legal-prose"><Fragment set:html={section.body} /></div></section>)}
+     <div class="legal-closing"><span>Back to the work.</span><a href="/#work">Explore the portfolio <Fragment set:html={icon('arrow')} /></a></div>
+    </article>
+   </div>
+  </main>
+  <div class="contact legal-footer"><div class="shell"><Fragment set:html={renderFooter(profile, '/')} /></div></div>
+ </body>
+</html>

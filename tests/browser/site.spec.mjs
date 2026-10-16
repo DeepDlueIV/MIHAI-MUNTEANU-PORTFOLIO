@@ -132,14 +132,22 @@ test('unavailable WebGL and storage retain usable 3D, navigation and manual cont
   await expect(page.locator('#study-1')).toBeVisible();
 });
 
-test('contact copies the real address without inventing a mail form', async ({ page, context }) => {
-  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+test('contact exposes the exact email and address without copy actions or GitHub', async ({ page }) => {
   await page.goto('/#contact');
-  await page.locator('[data-copy]').click();
-  await expect(page.locator('.copy-status')).toHaveText('Copied to clipboard.');
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('47 rue Vivienne, 75002 Paris, France');
-  await expect(page.locator('form')).toHaveCount(0);
-  await expect(page.locator('a[href^="mailto:"]')).toHaveCount(0);
+  const contact = page.locator('#contact');
+  const link = contact.locator('.contact-email-link');
+  await expect(link).toHaveAttribute('href', 'mailto:mihai.muntenau%40inbox.eu');
+  await expect(link).toContainText('mihai.muntenau@inbox.eu');
+  await expect(link.locator('.contact-method-icon svg')).toBeVisible();
+  await expect(contact.locator('.contact-address .contact-method-icon svg')).toBeVisible();
+  await expect(contact.locator('.contact-address')).toContainText('47 rue Vivienne');
+  await expect(page.locator('[data-copy], .copy-status, form, a[href*="github.com"]')).toHaveCount(0);
+  // Inspect the actual activated mailto without opening a mail client or sending email.
+  await link.evaluate(el => el.addEventListener('click', event => { event.preventDefault(); el.dataset.activated = el.getAttribute('href'); }, { once: true }));
+  await link.focus();
+  await page.keyboard.press('Enter');
+  await expect(link).toHaveAttribute('data-activated', 'mailto:mihai.muntenau%40inbox.eu');
+  await contact.screenshot({ path: 'qa/contact-desktop.png' });
 });
 
 test('Firefox style controls, visible progress, and Play resume under a mouse pointer', async ({ page }) => {

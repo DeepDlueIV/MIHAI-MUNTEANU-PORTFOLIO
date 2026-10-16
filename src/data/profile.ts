@@ -15,7 +15,8 @@ export const profile: Profile = {
   specialty: 'Backend & integration architecture',
   location: 'Paris, France',
   address: '47 rue Vivienne, 75002 Paris, France',
-  contactEmail: null,
+  // Exact spelling supplied by the owner: muntenau, not munteanu.
+  contactEmail: 'mihai.muntenau@inbox.eu',
   phone: null,
   linkedInUrl: null,
   personalGithubUrl: null,

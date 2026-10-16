@@ -1,0 +1,29 @@
+/* Contact details and legal navigation share the existing palette and spacing. */
+.contact-details { min-width: 0; }
+.contact-details .contact-methods { display: grid; gap: 0; width: 100%; margin: 25px 0 0; font-style: normal; }
+.contact-row { display: flex; align-items: flex-start; gap: 16px; min-width: 0; padding: 17px 0; }
+.contact-method-icon { display: grid; place-items: center; flex: 0 0 38px; width: 38px; height: 38px; border: 1px solid #38445b; border-radius: 8px; color: #95afff; background: #91a9ff08; }
+.contact-method-icon .icon { width: 19px; height: 19px; }
+.contact-method-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.contact-method-label { color: #a0acc0; font-family: var(--mono); font-size: 10px; line-height: 1.4; text-transform: uppercase; letter-spacing: 1.1px; }
+.contact-method-value { color: #d0d8e7; font-size: 15px; line-height: 1.6; overflow-wrap: anywhere; }
+.contact-email-link { min-height: 72px; align-items: center; border-top: 1px solid var(--dark-line); }
+.contact-email-link .contact-method-value { color: #adc0ff; text-decoration: underline; text-decoration-color: #adc0ff45; text-underline-offset: 5px; }
+.contact-email-link:hover .contact-method-value { color: #fff; text-decoration-color: #adc0ff; }
+.contact-email-link:hover .contact-method-icon { border-color: #7798ff; color: #dce5ff; }
+.contact-email-arrow { margin-left: auto; align-self: center; width: 16px; height: 16px; color: #91a9ff; }
+.contact .site-footer { gap: 20px 28px; }
+.footer-links { display: flex; align-items: center; gap: 22px; }
+.footer-links a { display: flex; align-items: center; min-height: 44px; color: #a5b2c8; font-size: 12px; white-space: nowrap; }
+.footer-links a:hover { color: #fff; }
+@media (max-width: 1000px) { .contact .site-footer { flex-wrap: wrap; } }
+@media (max-width: 700px) {
+ .contact-details .contact-methods { margin-top: 16px; }
+ .contact-row { gap: 14px; }
+ .contact-method-value { font-size: 15px; }
+ .contact .site-footer { display: grid; grid-template-columns: auto 1fr; column-gap: 18px; row-gap: 8px; }
+ .contact .site-footer .footer-meta { justify-self: end; margin: 0; }
+ .footer-links { grid-column: 1 / -1; flex-wrap: wrap; gap: 8px 26px; }
+ .footer-links a { font-size: 12px; }
+}
+@media print { .contact-method-value, .contact-method-label, .footer-links a { color: #111; } }
